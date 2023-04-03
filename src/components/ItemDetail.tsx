@@ -1,37 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { STATUS, TodoType } from "../type/TodoType";
-
-type DialogProps = {
-  visible: boolean;
-};
-const Dialog = styled.div<DialogProps>`
-  display: ${(props) => (props.visible ? "flex" : "none")};
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  height: 100vh;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-`;
-
-const DialogContent = styled.form`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 1;
-  z-index: 5;
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 5%;
-  box-shadow: 0 1px 2px #ccc;
-  min-width: 360px;
-`;
+import { TheDialog, TheForm, TheInput } from "../assets/styled";
 
 const Button = styled.button`
   height: 2.5rem;
@@ -82,12 +52,7 @@ function ItemDetail({
     });
   };
 
-  const handleSubmit = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    onSubmit(form);
-
+  const resetForm = () => {
     setForm({
       id: item.id,
       title: "",
@@ -96,17 +61,22 @@ function ItemDetail({
     });
   };
 
+  const handleSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    onSubmit(form);
+
+    resetForm();
+  };
+
   const handleCancel = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
     onCancel();
-    setForm({
-      id: item.id,
-      title: "",
-      description: "",
-      status: STATUS.OPEN,
-    });
+
+    !isEdit && resetForm();
   };
 
   const handleUpdate = (
@@ -122,19 +92,19 @@ function ItemDetail({
     event.preventDefault();
     onDelete(form.id);
   };
+
   return (
-    <Dialog visible={visible}>
-      <DialogContent>
+    <TheDialog visible={visible}>
+      <TheForm>
         <h3 className="text-center">TODO</h3>
         <span>Id: {form.id}</span>
         <label htmlFor="title">Title</label>
-        <input
-          className="rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 focus:outline-none sm:text-sm sm:leading-6"
+        <TheInput
           type="text"
           value={form.title}
           onChange={(e) => handleChange({ title: e.target.value })}
         />
-        <label htmlFor="title">Description</label>
+        <label htmlFor="description">Description</label>
         <textarea
           className="rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 focus:outline-none sm:text-sm sm:leading-6"
           rows={3}
@@ -142,7 +112,7 @@ function ItemDetail({
           value={form.description}
           onChange={(e) => handleChange({ description: e.target.value })}
         />
-        <label htmlFor="title">Status</label>
+        <label htmlFor="status">Status</label>
         <select
           value={form.status}
           className="rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-none sm:text-sm sm:leading-6"
@@ -164,8 +134,8 @@ function ItemDetail({
             <Button onClick={handleSubmit}>Submit</Button>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </TheForm>
+    </TheDialog>
   );
 }
 

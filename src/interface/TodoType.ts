@@ -1,9 +1,4 @@
-export enum STATUS {
-  OPEN = 1,
-  INPROGRESS = 2,
-  DONE = 3,
-  ARCHIVED = 4,
-}
+import { STATUS } from "../enum/Status";
 
 export interface TodoType {
   id: number;
